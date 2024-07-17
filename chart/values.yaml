@@ -1,0 +1,43 @@
+replicaCount: 1
+
+image:
+  repository: busybox
+  pullPolicy: IfNotPresent
+  tag: stable
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+service:
+  type: ClusterIP
+  api:
+    port: 8080
+  logs:
+    port: 8081
+  soap:
+    port: 8082
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+
+command: ["sh", "-c", "while true; do echo Hello, Kubernetes!; sleep 3600; done"]
+
+lifecycle:
+  enabled: false
+
+livenessProbe:
+  enabled: false
+
+readinessProbe:
+  enabled: false
+
+application:
+  profile: ""

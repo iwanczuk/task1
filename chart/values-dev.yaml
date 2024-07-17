@@ -1,0 +1,4 @@
+replicaCount: 3
+
+application:
+  profile: "dev"
