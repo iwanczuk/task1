@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: task1
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: dev-global-cluster-0
+            url: https://kubernetes.default.svc
+            env: dev
+          - cluster: prd-global-cluster-5
+            url: https://kubernetes.default.svc
+            env: prd
+  template:
+    metadata:
+      name: 'task1'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/iwanczuk/task1.git
+        targetRevision: HEAD
+        path: chart
+        helm:
+          releaseName: task1
+          valueFiles:
+            - "values.yaml"
+            - "values-{{env}}.yaml"
+          parameters:
+            - name: application.profile
+              value: "{{env}}"
+      destination:
+        server: "{{url}}"
+        namespace: task1
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true
